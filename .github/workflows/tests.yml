@@ -10,4 +10,21 @@ jobs:
           python-version: '3.11'
       - run: pip install -e '.[dev]'
       - run: pytest
-      - run: python -c "import nbformat; nbformat.validate(nbformat.read('notebooks/01_fingerprint_baseline.ipynb', as_version=4))"
+      - run: python -c "import nbformat; from pathlib import Path; [nbformat.validate(nbformat.read(p, as_version=4)) for p in Path('notebooks').glob('*.ipynb')]"
+
+  chemprop-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e '.[dev,chemprop]'
+      - run: pytest
+      - name: End-to-end real-data smoke comparison
+        run: |
+          expansionrx-baseline --output runs/rf-smoke --trees 20 --jobs 2
+          expansionrx-chemprop --accelerator cpu --epochs 2 --hidden-size 32 --output runs/chemprop-smoke --baseline-dir runs/rf-smoke
+          expansionrx-chemprop --accelerator cpu --epochs 2 --hidden-size 32 --output runs/chemprop-smoke --baseline-dir runs/rf-smoke

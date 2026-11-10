@@ -4,7 +4,7 @@ Reproducible molecular-property prediction on the OpenADMET–ExpansionRx datase
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/antoniaval/expansionrx-baselines/blob/main/notebooks/01_fingerprint_baseline.ipynb)
 
-**Current scope:** Morgan fingerprints → nine independent random forests, compared with training-median predictors. This is an initial baseline, not a new method or a claimed competition result. Multitask and pretrained-model comparisons are planned, not implemented.
+**Current scope:** Morgan fingerprints → nine independent random forests, training-median predictors, and a nine-task Chemprop directed message-passing neural network. Pretrained-model comparisons are planned. These are development baselines, not new methods or claimed competition placements.
 
 ## First verified result
 
@@ -32,6 +32,30 @@ pytest
 ```
 
 Repeat the same command to resume: completed endpoints are skipped. An interrupted endpoint is retrained. Different settings, package versions or source code require a new output folder. Run separate seeds in separate folders.
+
+## Multitask Chemprop on a Colab GPU
+
+[![Open Chemprop in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/antoniaval/expansionrx-baselines/blob/main/notebooks/02_multitask_chemprop.ipynb)
+
+Choose a **T4 GPU** runtime, then run notebook 02 in order. It installs an isolated Python environment, mounts Drive if requested, reuses or creates the matching fingerprint baseline, trains Chemprop and produces a comparison table and plot. Expect a several-minute first installation; GPU training time has not yet been measured by this project.
+
+Default model: Chemprop 2.2.1, one shared directed bond-message-passing network (hidden size 300, depth 3), mean aggregation, a nine-output regression head, dropout 0.1, 50 epochs and batch size 64. No external pretraining or added molecular descriptors. Dependencies are pinned in the `chemprop` extra; the notebook isolates them from Colab's preinstalled packages.
+
+```bash
+pip install -e '.[chemprop]'
+expansionrx-chemprop --accelerator gpu --output runs/chemprop_seed42_split42 \
+  --baseline-dir runs/rf_seed42 --split-seed 42 --seed 42 --epochs 50
+```
+
+Use `--accelerator cpu --epochs 2 --hidden-size 32` with a new output folder for a small integration check. This is not the full model experiment.
+
+**Fair comparison:** the dataset revision, scaffold split and evaluation formulas are shared with the forest. Model seed and split seed are separate. Missing targets are masked, not filled with fabricated labels. Target standardization is fitted only on training observations; predictions are unscaled before evaluation. Non-LogD predictions are clipped to their nonnegative transformed domain, matching the challenge's raw-value clipping.
+
+**Checkpoint selection:** Chemprop selects the lowest masked standardized validation MSE, not the lowest macro RAE. Its default loss aggregates observed entries, so densely measured tasks contribute more observations; the reported macro RAE still weights endpoints equally. Since the holdout selects the epoch, its score is a development estimate. The original published test remains untouched.
+
+**Resume:** checkpoints and CSV logs are saved every epoch. Rerunning the identical command restores `last.ckpt`, including optimizer/scheduler state. Completed training reloads `best.ckpt`. Keep the same path, code and package versions. Exact bitwise reproduction of uninterrupted training after a disconnect is not promised. Changed settings require a new folder; the fixed learning-rate schedule means changing the planned epoch budget is a new experiment.
+
+**Outputs:** `metrics.csv`, `predictions.csv`, `target_scaler.json`, `checkpoints/best.ckpt`, `checkpoints/last.ckpt`, training logs, and (when `--baseline-dir` is supplied) `comparison.csv`/`comparison.png`. Negative `delta_rae_chemprop_minus_rf` favours Chemprop. Keep the scaler alongside the checkpoint for inference. Load only trusted checkpoints.
 
 ## Evaluation protocol
 
@@ -64,7 +88,7 @@ Models and predictions are saved locally/Drive and excluded from Git. Load only 
 **How much ADMET prediction performance can public data and a modest compute budget deliver?**
 
 1. Establish fingerprint baselines and validate the data pipeline (this release).
-2. Compare multitask Chemprop and an appropriately licensed pretrained molecular model.
+2. Run the implemented multitask Chemprop comparison; then add an appropriately licensed pretrained molecular model.
 3. Select one extension from evidence in training-only error analysis.
 4. Freeze the protocol; evaluate the original time-based test split and report accuracy, limitations and measured compute.
 

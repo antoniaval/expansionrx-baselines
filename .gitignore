@@ -8,3 +8,5 @@ data/
 runs/
 *.joblib
 .DS_Store
+*.ckpt
+.chemprop-env/

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "expansionrx-baselines"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reproducible molecular ML baselines on ExpansionRx, starting with training-only validation"
 requires-python = ">=3.11,<3.14"
 dependencies = [
@@ -13,8 +13,11 @@ dependencies = [
 ]
 [project.optional-dependencies]
 dev = ["pytest==8.4.1", "nbformat==5.10.4"]
+chemprop = ["chemprop==2.2.1", "lightning==2.5.2", "torch==2.6.0", "torchmetrics==1.7.4"]
+
 [project.scripts]
 expansionrx-baseline = "expansionrx.baseline:main"
+expansionrx-chemprop = "expansionrx.multitask:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 [tool.pytest.ini_options]
