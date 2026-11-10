@@ -6,6 +6,10 @@ Reproducible molecular-property prediction on the OpenADMET–ExpansionRx datase
 
 **Current scope:** Morgan fingerprints → nine independent random forests, compared with training-median predictors. This is an initial baseline, not a new method or a claimed competition result. Multitask and pretrained-model comparisons are planned, not implemented.
 
+## First verified result
+
+The default 200-tree baseline achieved **0.671 validation macro RAE**, compared with **1.010** for the training-median predictor, on one scaffold holdout. These are preliminary internal-validation scores, not leaderboard results. [See the saved metrics, label counts, configuration and plot](reports/first_baseline/README.md).
+
 ## Run in Colab
 
 1. Click **Open in Colab** above and optionally save a copy to your Drive.

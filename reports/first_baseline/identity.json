@@ -1,0 +1,20 @@
+{
+  "config": {
+    "seed": 42,
+    "trees": 200,
+    "min_samples_leaf": 2,
+    "max_features": "sqrt",
+    "fingerprint": "Morgan bits, radius=2, size=2048, chirality=True",
+    "validation_group_fraction": 0.2,
+    "data_revision": "f40a23ea75a56560e9a1ce6ddc1586dd6a1f25d9",
+    "data_sha256": "c5214ad8c8a4d7d4d09082fcce24fe16c97a980a1e0873b91b8c8e474b79f6e4",
+    "code_sha256": "926efb583ac9fc54a54704e5d378ed784090f80a11dff6ed5c2e7acb177f5b78"
+  },
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "rdkit": "2025.3.6",
+    "joblib": "1.5.1"
+  }
+}

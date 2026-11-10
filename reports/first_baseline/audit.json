@@ -1,0 +1,20 @@
+{
+  "rows": 5326,
+  "training_rows": 4204,
+  "validation_rows": 1122,
+  "scaffold_groups": 2350,
+  "canonical_duplicate_rows": 0,
+  "missing_labels": {
+    "LogD": 287,
+    "KSOL": 198,
+    "HLM CLint": 1567,
+    "MLM CLint": 804,
+    "Caco-2 Permeability Papp A>B": 3169,
+    "Caco-2 Permeability Efflux": 3165,
+    "MPPB": 4024,
+    "MBPB": 4351,
+    "MGMB": 5104
+  },
+  "scaffold_overlap": 0,
+  "canonical_overlap": 0
+}
