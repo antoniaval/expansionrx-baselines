@@ -10,3 +10,5 @@ runs/
 .DS_Store
 *.ckpt
 .chemprop-env/
+.chemprop-env-py311/
+.setup-tools/

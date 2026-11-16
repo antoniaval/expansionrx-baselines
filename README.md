@@ -37,7 +37,7 @@ Repeat the same command to resume: completed endpoints are skipped. An interrupt
 
 [![Open Chemprop in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/antoniaval/expansionrx-baselines/blob/main/notebooks/02_multitask_chemprop.ipynb)
 
-Choose a **T4 GPU** runtime, or **CPU** when GPUs are unavailable, then run notebook 02 in order. The notebook automatically detects CUDA and otherwise trains on CPU; model size and epoch count stay the same. It installs an isolated Python environment, mounts Drive if requested, reuses or creates the matching fingerprint baseline, trains Chemprop and produces a comparison table and plot. Expect a several-minute first installation; GPU training time has not yet been measured by this project.
+Choose a **T4 GPU** runtime, or **CPU** when GPUs are unavailable, then run notebook 02 in order. The notebook automatically detects CUDA and otherwise trains on CPU; model size and epoch count stay the same. It installs an isolated Python 3.11 environment (independent of Colab’s host Python), mounts Drive if requested, reuses or creates the matching fingerprint baseline, trains Chemprop and produces a comparison table and plot. Expect a several-minute first installation; GPU training time has not yet been measured by this project.
 
 Default model: Chemprop 2.2.1, one shared directed bond-message-passing network (hidden size 300, depth 3), mean aggregation, a nine-output regression head, dropout 0.1, 50 epochs and batch size 64. No external pretraining or added molecular descriptors. Dependencies are pinned in the `chemprop` extra; the notebook isolates them from Colab's preinstalled packages.
 
@@ -105,3 +105,5 @@ Data: Expansion Therapeutics and the OpenADMET consortium, [original training da
 - [Challenge results and temporal-split description](https://openadmet.ghost.io/the-openadmet-expansionrx-blind-challenge-has-come-to-an-end/)
 
 Project code is MIT licensed. Research benchmark software; no clinical or general-purpose ADMET validation is claimed.
+
+If notebook 02 fails during setup, its setup output now includes the full underlying installation or import error. Reopen the current notebook from GitHub to load this fix. The new `.chemprop-env-py311` environment leaves old environments and saved results untouched.
